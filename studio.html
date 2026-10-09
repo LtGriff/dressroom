@@ -1,0 +1,227 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#dce6fc"><meta name="description" content="DRESSROOM v0.5 — offline Sims-inspired 3D character creator"><title>DRESSROOM v0.5 — Character Studio</title><style>:root{--ink:#233665;--muted:#7482a5;--line:#c1ccec;--green:#57e4a7;--blue:#6784ce;--light:#f3f5ff}
+*{box-sizing:border-box}html{height:100%}body{margin:0;min-width:320px;min-height:100vh;background:linear-gradient(128deg,#cad7fb,#e5eafa 45%,#c3d6f5);color:var(--ink);font:14px/1.48 'Trebuchet MS',Verdana,Arial,sans-serif}
+button,input{font:inherit}button{cursor:pointer;color:inherit}button:focus-visible,input:focus-visible{outline:3px solid #48bfe8;outline-offset:2px}button:disabled{opacity:.45;cursor:not-allowed}
+button{user-select:none}h1,h2,h3,p{margin:0}h1,h2,h3{letter-spacing:-.045em}
+.shell{max-width:1580px;min-height:100vh;margin:auto;padding:18px clamp(12px,2vw,30px);display:flex;flex-direction:column;gap:14px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 20px;background:linear-gradient(180deg,#fffdfdf0,#e9eefff0);border:1px solid #eaf0ff;border-bottom:3px solid #9cafe3;border-radius:23px;box-shadow:0 10px 40px #50659f24;min-height:78px}
+.brand{display:flex;align-items:center;gap:11px}.mark{height:48px;width:48px;display:grid;place-items:center;border-radius:16px;background:linear-gradient(145deg,#53ffd0,#3b94dd 74%);box-shadow:inset 0 2px 0 #ffffffc4,0 5px 0 #4968a64a;font-weight:1000;font-size:30px;color:#143d67;transform:rotate(-7deg)}.brand strong{font-size:24px;line-height:1;letter-spacing:-.08em;display:block}.brand small{font-size:10px;font-weight:900;letter-spacing:.2em;color:#7589bc;display:block;margin-top:4px}
+.topright{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.buildpill{background:#dfe8fc;border:1px solid #c1ceee;border-radius:50px;padding:9px 14px;color:#4462a3;font-size:10px;font-weight:900;letter-spacing:.11em}.top-action{border-radius:12px;border:1px solid #bdcaed;background:white;color:#34518f;font-weight:900;font-size:11px;padding:11px 15px}.top-action:hover{background:#e4ecff}
+.main{display:grid;grid-template-columns:minmax(190px,225px) minmax(360px,1fr) minmax(318px,356px);gap:14px;flex:1;min-height:730px}.pane{background:linear-gradient(180deg,#f8f9ffef,#e8edfff0);border:1px solid #f6faff;border-bottom:3px solid #adbee9;border-radius:23px;box-shadow:0 16px 35px #5c72b32a;min-height:0;overflow:hidden}
+.profile{display:flex;flex-direction:column;padding:23px 18px;gap:21px}.eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#4669b0;font-weight:1000}.profile h1{font-size:32px;line-height:1.02;margin-top:7px}.profile .desc{color:#7886aa;font-size:12px;margin-top:12px;line-height:1.7}.tiny-heading{font-weight:900;letter-spacing:.15em;font-size:10px;color:#7a8cba;text-transform:uppercase;margin-bottom:11px}
+.namebox{background:#ffffffcb;border:1px solid #c6d1f3;border-radius:14px;padding:10px 12px;display:flex;gap:10px;align-items:center}.portrait{width:40px;height:40px;border-radius:11px;background:linear-gradient(130deg,#4589d4,#5ddab3);display:grid;place-items:center;color:white;font-weight:900;font-size:19px}.namebox input{width:100%;background:none;border:0;border-bottom:1px solid #c0cbee;font-weight:900;color:#284280;outline:none;min-width:0;padding:0 0 3px}.namebox small{color:#9caad0;font-size:9px;font-weight:800;letter-spacing:.12em}
+.profile section{border-top:1px solid #ced9f7;padding-top:17px}.profile-note{margin-top:auto;padding:12px;background:#f9fbffb5;border:1px dashed #a7bce9;border-radius:12px;color:#677aa5;font-size:11px;line-height:1.6}.profile-note b{color:#4266af}.profile-stat{display:flex;justify-content:space-between;gap:8px;font-size:11px;margin-bottom:11px}.profile-stat span{color:#8e9dc3}.profile-stat b{text-align:right}.feature-chips{display:flex;flex-wrap:wrap;gap:5px}.feature-chips span{font-size:9px;font-weight:900;background:#dfeafb;color:#4968ac;padding:6px 8px;border-radius:40px}
+.stage{position:relative;min-height:730px;overflow:hidden;border-radius:25px;box-shadow:0 18px 50px #667ab73f;background:radial-gradient(ellipse at 48% 28%,#fcfdfff5,#f1f7ff73 45%,transparent 77%),linear-gradient(115deg,#98b5e9,#d5e6ff 51%,#96aee7);border:2px solid #f4f8ff;isolation:isolate}
+.stage::before{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,#fff3 1px,transparent 1px),linear-gradient(#fff3 1px,transparent 1px);background-size:65px 65px;mask-image:linear-gradient(transparent 10%,black 65%,black 95%);opacity:.55}
+.stage::after{content:'';position:absolute;width:130%;height:240px;left:-15%;bottom:-140px;z-index:0;border-radius:50%;background:radial-gradient(ellipse at center,#ffffff9a 10%,#8ea2d8bd 60%,transparent 68%);transform:perspective(420px) rotateX(53deg)}
+.scene-float{position:absolute;z-index:0;inset:0;pointer-events:none}.frame{position:absolute;top:20%;left:7%;width:95px;height:110px;border:10px solid #ffffff69;outline:3px solid #6880af19;transform:rotate(-9deg);box-shadow:0 0 0 7px #667fb218}.frame.two{left:auto;right:7%;top:22%;width:125px;height:140px;transform:rotate(8deg)}.room-line{position:absolute;bottom:24%;width:100%;height:2px;background:#edf5ff7e}.scene-watermark{position:absolute;right:3%;bottom:10%;font-weight:1000;font-size:clamp(70px,13vw,200px);line-height:1;color:#ffffff46;letter-spacing:-.12em;transform:rotate(-10deg)}
+.stage-top{position:absolute;top:23px;left:23px;right:23px;z-index:4;display:flex;gap:9px;justify-content:space-between;align-items:flex-start}.scene-title{background:#f9fcffe0;border:1px solid #ffffffd9;border-radius:13px;padding:11px 15px;box-shadow:0 6px 16px #456cb01c}.scene-title small{display:block;font-size:10px;font-weight:900;letter-spacing:.17em;color:#6381bd}.scene-title strong{font-size:18px;letter-spacing:-.04em}.live{border:1px solid #ffffffd1;background:#e1f4f0a9;color:#227b78;border-radius:50px;padding:8px 12px;font-size:10px;letter-spacing:.1em;font-weight:900;white-space:nowrap}
+#viewer{width:100%;height:100%;position:absolute;inset:0;z-index:2;display:block;touch-action:none}.star{position:absolute;z-index:3;top:3%;left:50%;width:46px;height:54px;transform:translateX(-50%);filter:drop-shadow(0 4px 9px #ca7de287);pointer-events:none}
+.star:before{content:'';position:absolute;inset:0;clip-path:polygon(50% 0,59% 34%,100% 50%,59% 66%,50% 100%,41% 66%,0 50%,41% 34%);background:conic-gradient(from 15deg,#d7ffff,#6b9aff,#e450e0,#ff9f61,#a8ffda,#50a4ff,#f0ceff,#e2ffff);box-shadow:inset 0 0 8px #ffffffc7}
+.star:after{content:'';position:absolute;inset:22% 22%;clip-path:polygon(50% 0,66% 35%,100% 50%,65% 66%,50% 100%,35% 65%,0 50%,34% 34%);background:linear-gradient(135deg,#ffffffec,#ffc3ed80,#7dddff89,#fff9e3c7)}
+.stage-bottom{position:absolute;bottom:19px;left:18px;right:18px;z-index:4;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}.camera-controls{display:flex;gap:4px;background:#ffffffed;border:1px solid #b3c2e5;border-radius:999px;padding:5px;box-shadow:0 8px 24px #5a72a044}.cam{border:0;border-radius:100px;padding:11px 13px;background:transparent;color:#617aaf;font-weight:900;font-size:10px;letter-spacing:.08em}.cam:hover{background:#e5edff}.cam.active{color:#fff;background:linear-gradient(135deg,#4879d1,#4062b6);box-shadow:0 3px 8px #5276be66}.rotate{border-radius:100px;font-size:12px;font-weight:900;border:1px solid #fff;background:#ffffffec;color:#4768ae;box-shadow:0 5px 18px #456db63a;height:41px;min-width:41px}.rotate.active{background:#55dfab;color:#174b56}.view-hint{position:absolute;bottom:84px;left:50%;transform:translateX(-50%);color:#4b6cb0;font-size:10px;letter-spacing:.13em;font-weight:900;background:#ecf3ffb0;padding:7px 10px;border-radius:30px;z-index:3;white-space:nowrap}
+.editor{display:flex;flex-direction:column}.edit-top{padding:22px 18px 12px}.edit-top h2{font-size:27px;margin:5px 0}.edit-top p{font-size:11px;color:#7c8cb4;line-height:1.6}.tabs{padding:0 14px 14px;display:flex;gap:5px;border-bottom:1px solid #c9d5f4}.tab{flex:1;padding:11px 4px;border-radius:11px;border:1px solid #becdf1;background:#fff9;color:#6b83b5;font-weight:900;font-size:10px}.tab.active{background:linear-gradient(160deg,#4f83da,#3b5ba8);color:white;border-color:#4067bd}.scroll{overflow:auto;min-height:0;flex:1;padding:17px 15px 9px;max-height:690px;scrollbar-color:#adc0ed transparent;scrollbar-width:thin}
+.sect{margin-bottom:20px}.sect-title{display:flex;align-items:center;justify-content:space-between;gap:9px;margin:0 3px 10px}.sect-title h3{font-size:11px;font-weight:900;letter-spacing:.16em;color:#5970a8;text-transform:uppercase}.sect-title span{font-size:9px;color:#98a8d0;font-weight:900;letter-spacing:.08em}.tile-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.tile{min-width:0;min-height:111px;border:1px solid #c6d2f0;border-radius:15px;padding:9px 5px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;transition:transform .15s,border-color .15s;box-shadow:0 3px 8px #6584b018}.tile:hover{transform:translateY(-2px)}.tile.active{border:2px solid #35c888;outline:1px solid #d4fae8;background:linear-gradient(165deg,#fff,#eafbf4)}.tile svg{max-width:82px;height:62px}.tile b{font-size:10px;text-align:center}.tile small{font-size:9px;color:#91a0c2;text-align:center}.check{position:absolute;top:5px;right:5px;border-radius:50%;width:16px;height:16px;background:#32c687;color:white;font-size:11px;font-weight:900;display:grid;place-items:center}
+.swatches{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.swatch-button{display:flex;flex-direction:column;align-items:center;gap:7px;border:1px solid transparent;background:none;border-radius:13px;padding:7px 5px;font-size:9px;color:#667eac;font-weight:900}.swatch-button.active{background:#e4f9ef;border-color:#36ca8d}.swatch{height:38px;width:38px;border-radius:50%;border:3px solid white;box-shadow:0 0 0 1px #c1cdee}.swatch-button.active .swatch{box-shadow:0 0 0 2px #33c78b}
+.preset-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.preset{padding:12px 8px;text-align:center;font-size:11px;border:1px solid #b8c8ec;border-radius:11px;background:#fff;color:#5574a8;font-weight:900}.preset.active{background:#3f69ba;color:white}.rangebox{padding:4px 3px 10px}.range-title{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#5f72a3;font-weight:900;margin:8px 0}.rangebox input{width:100%;accent-color:#35c886;cursor:pointer}.range-title output{color:#3b6fac}
+.editor-actions{padding:13px 15px;border-top:1px solid #c7d4f0;display:grid;grid-template-columns:1fr 1fr;gap:8px}.action{background:#fff;border:1px solid #b9c9ef;border-radius:11px;font-weight:900;color:#4164a6;padding:13px 7px;font-size:10px}.action.primary{background:linear-gradient(135deg,#4c8bdc,#3a60b6);color:#fff;border-color:#4f84ce}.action.full{grid-column:1/-1}.action:hover{filter:brightness(.97)}.empty{padding:30px 10px;text-align:center;color:#8493bb;font-size:12px;line-height:1.6}.saved{display:flex;gap:8px;align-items:center;padding:10px;background:#fff;border:1px solid #cad7f2;border-radius:13px;margin:8px 0}.saved-info{flex:1;min-width:0}.saved-info b{display:block;font-size:12px}.saved-info small{display:block;font-size:10px;color:#9aa9c8}.saved button{padding:8px 7px;font-weight:900;background:#e5edfc;border:0;border-radius:8px;color:#4c6bac;font-size:10px}.saved .delete{color:#ae5873;background:#fff1f1}.footer{display:flex;justify-content:space-between;gap:10px;color:#6980b0;font-size:10px;letter-spacing:.04em;padding:0 6px}.toast{position:fixed;z-index:50;bottom:20px;left:50%;transform:translate(-50%,18px);opacity:0;pointer-events:none;background:#1f356d;color:white;box-shadow:0 7px 20px #18346260;padding:13px 17px;border-radius:30px;font-size:12px;font-weight:900;transition:.2s}.toast.show{transform:translate(-50%,0);opacity:1}
+@media(max-width:1180px){.main{grid-template-columns:minmax(170px,210px) minmax(350px,1fr);min-height:0}.editor{grid-column:1/-1}.scroll{max-height:none}.editor .tile-grid{grid-template-columns:repeat(3,1fr)}.stage{min-height:725px}}
+@media(max-width:780px){.shell{padding:9px;gap:9px}.top{padding:13px;min-height:64px}.brand strong{font-size:20px}.mark{width:37px;height:37px;font-size:23px}.brand small{font-size:8px}.topright{gap:6px}.buildpill{font-size:9px;padding:7px}.top-action{font-size:10px;padding:8px}.main{display:flex;flex-direction:column}.stage{order:-1;min-height:660px}.profile{order:1;padding:16px}.editor{order:2}.profile h1{font-size:25px}.profile .profile-note{display:none}.profile section{display:none}.stage-top{top:13px;left:12px;right:12px}.scene-title strong{font-size:14px}.live{font-size:8px}.stage-bottom{left:7px;right:7px;bottom:11px;gap:5px}.cam{font-size:9px;padding:11px 11px}.camera-controls{gap:2px}.view-hint{bottom:72px}.star{top:3%}.footer{flex-direction:column;gap:1px}}
+@media(prefers-reduced-motion:reduce){.tile,.toast{transition:none}}
+</style></head><body><div class="shell">
+<header class="top">
+  <div class="brand"><span class="mark" aria-hidden="true">D</span><span><strong>DRESSROOM.</strong><small>CHARACTER STUDIO / V0.5</small></span></div>
+  <div class="topright"><span class="buildpill">LIFE STUDIO · SOLO MODEL</span><button class="top-action" id="randomize">↻ SURPRISE ME</button></div>
+</header>
+<div class="main">
+  <aside class="pane profile">
+    <div><span class="eyebrow">CREATE YOUR CHARACTER</span><h1>Your style.<br>Your world.</h1><p class="desc">Our first real character system. One model, a small wardrobe, and a personal look you can build on.</p></div>
+    <div class="namebox"><div class="portrait">T</div><div style="flex:1;min-width:0"><input id="name" value="Tre" maxlength="22" aria-label="Your character name"><small>CHARACTER FILE 001</small></div></div>
+    <section><div class="tiny-heading">Your wardrobe</div><div class="profile-stat"><span>Shirts</span><b>3 selectable</b></div><div class="profile-stat"><span>Pants</span><b>3 selectable</b></div><div class="profile-stat"><span>Shoes</span><b>3 selectable</b></div><div class="profile-stat"><span>Skin tones</span><b>4 options</b></div><div class="profile-stat"><span>Hair</span><b>3 styles</b></div></section>
+    <section><div class="tiny-heading">Editor features</div><div class="feature-chips"><span>TRUE 3D</span><span>ROTATION</span><span>BODY PRESETS</span><span>OFFLINE</span><span>SAVED LOOKS</span></div></section>
+    <div class="profile-note"><b>Build note:</b> This is an original, smoothly sculpted game-style starter avatar, not a Sims asset or a finished scan of your face. We refine the character first, then add other art styles to the same closet system.</div>
+  </aside>
+  <main class="stage" id="stage">
+    <div class="scene-float" aria-hidden="true"><i class="frame"></i><i class="frame two"></i><i class="room-line"></i><span class="scene-watermark">D</span></div>
+    <div class="stage-top"><div class="scene-title"><small>THE NEIGHBORHOOD · CHARACTER STUDIO</small><strong>CREATE A LOOK</strong></div><span class="live">● LIVE 3D · OFFLINE</span></div>
+    <div class="star" aria-hidden="true"></div>
+    <canvas id="viewer" aria-label="3D character preview. Use the buttons below to spin and select camera angles." role="img"></canvas>
+    <div class="view-hint" id="view-hint">FRONT VIEW · ROTATE TO INSPECT</div>
+    <div class="stage-bottom" role="group" aria-label="Character camera controls">
+      <button class="rotate" id="rotate-left" aria-label="Rotate 45 degrees left">↶</button>
+      <div class="camera-controls"><button data-camera="front" class="cam active" aria-pressed="true">FRONT</button><button data-camera="side" class="cam" aria-pressed="false">SIDE</button><button data-camera="back" class="cam" aria-pressed="false">BACK</button><button data-camera="spin" class="cam" aria-pressed="false">AUTO ↻</button></div>
+      <button class="rotate" id="rotate-right" aria-label="Rotate 45 degrees right">↷</button>
+    </div>
+  </main>
+  <aside class="pane editor">
+    <div class="edit-top"><span class="eyebrow">WARDROBE + APPEARANCE</span><h2>Make it yours.</h2><p>Select an item and see it change on your 3D character. Use Appearance for skin, hair, and shape.</p></div>
+    <div class="tabs"><button class="tab active" data-tab="wardrobe" aria-pressed="true">WARDROBE</button><button class="tab" data-tab="appearance" aria-pressed="false">APPEARANCE</button><button class="tab" data-tab="saved" aria-pressed="false">SAVED LOOKS</button></div>
+    <div id="editor-content" class="scroll"></div>
+    <div class="editor-actions"><button class="action primary" id="save">SAVE LOOK</button><button class="action" id="reset">RESET</button><button class="action full" id="export">EXPORT LOOK AS PNG ↗</button></div>
+  </aside>
+</div>
+<footer class="footer"><span>DRESSROOM · LOCAL CHARACTER STUDIO · NO ACCOUNT REQUIRED</span><span>Original stylized prototype inspired by early-2000s character creator games</span></footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>(() => {
+'use strict';
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const STORE='dressroom_v05_character', LOOKS='dressroom_v05_looks';
+const defaults={name:'Tre',shirt:'black',pants:'cargo',shoes:'black',skin:'warm',hair:'fade',face:'defined',body:'average',height:1,shoulder:1,waist:1,tab:'wardrobe'};
+const items={
+ shirt:[{id:'black',name:'Black tee',detail:'Relaxed fit',hex:'#25272c'},{id:'white',name:'White tee',detail:'Clean cotton',hex:'#f7f6f0'},{id:'red',name:'Red tee',detail:'Bright red',hex:'#bd293b'}],
+ pants:[{id:'cargo',name:'Olive cargos',detail:'Wide leg',hex:'#716c50'},{id:'blue',name:'Blue jeans',detail:'Denim',hex:'#5177a4'},{id:'black',name:'Black jeans',detail:'Washed black',hex:'#30363c'}],
+ shoes:[{id:'black',name:'Black shoes',detail:'Everyday',hex:'#22262e'},{id:'white',name:'White shoes',detail:'Everyday',hex:'#f6f3ef'},{id:'red',name:'Red shoes',detail:'Everyday',hex:'#c92d3b'}]
+};
+const skinOptions=[{id:'fair',name:'Fair',rgb:[.92,.72,.58],css:'#eabb98'},{id:'warm',name:'Warm',rgb:[.77,.50,.33],css:'#c68256'},{id:'brown',name:'Brown',rgb:[.55,.33,.235],css:'#8d543c'},{id:'deep',name:'Deep',rgb:[.34,.19,.145],css:'#573124'}];
+const hairs=[{id:'fade',name:'Taper fade'},{id:'curls',name:'Short curls'},{id:'swept',name:'Side sweep'}];
+const faces=[{id:'soft',name:'Soft'},{id:'defined',name:'Defined'},{id:'angular',name:'Angular'}];
+const bodies=[{id:'slim',name:'Lean'},{id:'average',name:'Average'},{id:'broad',name:'Broad'}];
+const rand=a=>a[Math.floor(Math.random()*a.length)];
+function get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
+let state={...defaults,...get(STORE,{})};
+for(const k of ['shirt','pants','shoes'])if(!items[k].some(x=>x.id===state[k]))state[k]=defaults[k];
+if(!skinOptions.some(x=>x.id===state.skin))state.skin=defaults.skin;
+let saved=get(LOOKS,[]);if(!Array.isArray(saved))saved=[];
+let toastTimer;
+function toast(msg){const e=$('#toast');e.textContent=msg;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),2100)}
+function persist(){try{localStorage.setItem(STORE,JSON.stringify(state));localStorage.setItem(LOOKS,JSON.stringify(saved))}catch{}}
+function esc(str){return String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function optionIcon(k,id,clr){const border=id==='white'?'#a7aec0':'#4d6078';if(k==='shirt')return `<svg viewBox="0 0 90 78" aria-hidden="true"><path d="M27 9 37 5Q45 13 54 5L64 9 78 26 64 34 61 25 62 70H28L29 25 25 34 11 26Z" fill="${clr}" stroke="${border}" stroke-width="1.5"/><path d="M37 5Q45 17 54 5" fill="none" stroke="${border}" stroke-opacity=".35" stroke-width="2.5"/><path d="M29 65Q45 68 62 65" fill="none" stroke="${border}" stroke-opacity=".24" stroke-width="1.5"/></svg>`;
+if(k==='pants')return `<svg viewBox="0 0 90 78" aria-hidden="true"><path d="M24 6H66L68 71H49L45 35 41 71H22Z" fill="${clr}" stroke="${border}" stroke-width="1.5"/><path d="M24 18H66M45 17V33M28 24l5 34M62 24l-6 34" fill="none" stroke="#ffffff" stroke-opacity=".25" stroke-width="1.9"/>${id==='cargo'?'<path d="M24 30h11v12H24zM55 30h11v12H55z" fill="#ffffff" opacity=".17"/>':''}</svg>`;
+return `<svg viewBox="0 0 90 78" aria-hidden="true"><path d="M11 34q12-4 25 10l13 7q7 9-2 15H8q-9-3-6-12l9-20Zm43 0q12-4 25 10l9 9q8 8-2 13H49q-9-4-6-12l11-20Z" fill="${clr}" stroke="${border}" stroke-width="1.5"/><path d="M5 61h41M48 61h38" stroke="${id==='white'?'#c3cbd7':'#f1f3f2'}" stroke-width="3"/><path d="M16 48l22 1M57 49l22 1" stroke="#eeeeea" stroke-opacity=".6" stroke-width="2"/></svg>`}
+function renderEditor(){const e=$('#editor-content');$$('[data-tab]').forEach(b=>{const a=b.dataset.tab===state.tab;b.classList.toggle('active',a);b.setAttribute('aria-pressed',a)});
+ if(state.tab==='wardrobe')e.innerHTML=['shirt','pants','shoes'].map(k=>`<section class="sect"><div class="sect-title"><h3>${{shirt:'01 · Shirts',pants:'02 · Pants',shoes:'03 · Shoes'}[k]}</h3><span>3 STYLES</span></div><div class="tile-grid">${items[k].map(x=>`<button class="tile ${state[k]===x.id?'active':''}" aria-pressed="${state[k]===x.id}" data-choice="${k}:${x.id}">${optionIcon(k,x.id,x.hex)}<b>${x.name}</b><small>${x.detail}</small>${state[k]===x.id?'<span class="check">✓</span>':''}</button>`).join('')}</div></section>`).join('')+`<div style="padding:13px;border:1px dashed #b7c9ec;background:#f6f9ff;border-radius:14px;color:#7488b5;font-size:11px;line-height:1.6">All clothing is drawn on the actual 3D character, including from the back. Later we'll replace these starter garments with real scanned closet items.</div>`;
+ else if(state.tab==='appearance')e.innerHTML=`<section class="sect"><div class="sect-title"><h3>01 · Skin tone</h3><span>4 TONES</span></div><div class="swatches">${skinOptions.map(x=>`<button class="swatch-button ${state.skin===x.id?'active':''}" data-skin="${x.id}" aria-pressed="${state.skin===x.id}"><span class="swatch" style="background:${x.css}"></span>${x.name}</button>`).join('')}</div></section><section class="sect"><div class="sect-title"><h3>02 · Hairstyle</h3><span>3 STYLES</span></div><div class="preset-row">${hairs.map(x=>`<button class="preset ${state.hair===x.id?'active':''}" data-hair="${x.id}" aria-pressed="${state.hair===x.id}">${x.name}</button>`).join('')}</div></section><section class="sect"><div class="sect-title"><h3>03 · Face shape</h3><span>3 PRESETS</span></div><div class="preset-row">${faces.map(x=>`<button class="preset ${state.face===x.id?'active':''}" data-face="${x.id}" aria-pressed="${state.face===x.id}">${x.name}</button>`).join('')}</div></section><section class="sect"><div class="sect-title"><h3>04 · Body type</h3><span>3 PRESETS</span></div><div class="preset-row">${bodies.map(x=>`<button class="preset ${state.body===x.id?'active':''}" data-body="${x.id}" aria-pressed="${state.body===x.id}">${x.name}</button>`).join('')}</div></section><section class="sect"><div class="sect-title"><h3>05 · Fine tuning</h3></div>${[['height','Height'],['shoulder','Shoulders'],['waist','Waist']].map(([k,n])=>`<div class="rangebox"><div class="range-title"><label for="range-${k}">${n}</label><output id="out-${k}">${Math.round(state[k]*100)}%</output></div><input id="range-${k}" type="range" data-range="${k}" min=".85" max="1.17" step=".01" value="${state[k]}"></div>`).join('')}</section>`;
+ else e.innerHTML=saved.length?saved.map((x,i)=>`<div class="saved"><div class="saved-info"><b>${esc(x.name||'My Look')}</b><small>${esc([x.shirt,x.pants,x.shoes].join(' · '))} · ${esc(x.date||'Saved')}</small></div><button data-load="${i}">LOAD</button><button class="delete" data-delete="${i}">✕</button></div>`).join(''):`<div class="empty">No looks saved yet.<br>Build an outfit, then select <strong>SAVE LOOK</strong>.</div>`;
+}
+function renderUI(){renderEditor();$('#name').value=state.name;persistentDraw();persist()}
+// ---- Dependency-free 3D engine. Real 3D mesh, WebGL plus software fallback. ----
+const canvas=$('#viewer');let gl=null;
+try{gl=canvas.getContext('webgl',{alpha:true,antialias:true,preserveDrawingBuffer:true,depth:true})}catch{}
+const cpu=!gl;
+const ctx=cpu?canvas.getContext('2d'):null;
+const geo={};let program,attr={},uni={};let cpuTriangles=[];
+const vertexSrc=`attribute vec3 aPos;attribute vec3 aNormal;attribute vec2 aUv;uniform mat4 uMvp;uniform mat4 uMV;uniform vec3 uColor;varying vec3 vNormal;varying vec2 vUv;void main(){gl_Position=uMvp*vec4(aPos,1.0);vNormal=mat3(uMV)*aNormal;vUv=aUv;}`;
+const fragmentSrc=`precision mediump float;uniform vec3 uColor;uniform float uTexture;uniform float uGloss;varying vec3 vNormal;varying vec2 vUv;float rand(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}void main(){vec3 n=normalize(vNormal);float diffuse=max(dot(n,normalize(vec3(-0.45,0.7,0.85))),0.);float shade=0.68+diffuse*0.32;vec3 col=uColor;if(uTexture>.5&&uTexture<1.5){float noise=rand(floor(vUv*vec2(70.,150.)));col=mix(col,col*1.22,noise*.20);float threads=sin(vUv.x*170.)*.024;col+=vec3(threads);}if(uTexture>1.5&&uTexture<2.5){col+=vec3(.08,.075,.065)*step(.89,rand(floor(vUv*vec2(34.,27.))));}if(uGloss>0.5)col+=vec3(.045)*pow(diffuse,4.);gl_FragColor=vec4(clamp(col*shade,0.,1.),1.);}`;
+function shader(type,source){let x=gl.createShader(type);gl.shaderSource(x,source);gl.compileShader(x);if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(x));return x}
+function initGL(){if(!gl)return;program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vertexSrc));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fragmentSrc));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));gl.useProgram(program);for(const k of ['aPos','aNormal','aUv'])attr[k]=gl.getAttribLocation(program,k);for(const k of ['uMvp','uMV','uColor','uTexture','uGloss'])uni[k]=gl.getUniformLocation(program,k);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL)}
+const ident=()=>[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
+function mm(a,b){let out=Array(16).fill(0);for(let c=0;c<4;c++)for(let r=0;r<4;r++)for(let k=0;k<4;k++)out[c*4+r]+=a[k*4+r]*b[c*4+k];return out}
+function trans(x,y,z){let a=ident();a[12]=x;a[13]=y;a[14]=z;return a}
+function scl(x,y,z){let a=ident();a[0]=x;a[5]=y;a[10]=z;return a}
+function rx(a){let c=Math.cos(a),s=Math.sin(a);return[1,0,0,0,0,c,s,0,0,-s,c,0,0,0,0,1]}
+function ry(a){let c=Math.cos(a),s=Math.sin(a);return[c,0,-s,0,0,1,0,0,s,0,c,0,0,0,0,1]}
+function rz(a){let c=Math.cos(a),s=Math.sin(a);return[c,s,0,0,-s,c,0,0,0,0,1,0,0,0,0,1]}
+function pose(x,y,z,sx,sy,sz,az=0,ax=0,ay=0){return mm(trans(x,y,z),mm(ry(ay),mm(rz(az),mm(rx(ax),scl(sx,sy,sz)))))}
+function perspective(fov,aspect,near,far){let f=1/Math.tan(fov/2),d=near-far;return[f/aspect,0,0,0,0,f,0,0,0,0,(far+near)/d,-1,0,0,2*far*near/d,0]}
+function v4(m,x,y,z,w=1){return[m[0]*x+m[4]*y+m[8]*z+m[12]*w,m[1]*x+m[5]*y+m[9]*z+m[13]*w,m[2]*x+m[6]*y+m[10]*z+m[14]*w,m[3]*x+m[7]*y+m[11]*z+m[15]*w]}
+function saveGeometry(name,p,n,uv,indices){const g={p,n,uv,indices};if(gl){const arr=[];for(let i=0;i<p.length/3;i++)arr.push(p[3*i],p[3*i+1],p[3*i+2],n[3*i],n[3*i+1],n[3*i+2],uv[2*i],uv[2*i+1]);g.vb=gl.createBuffer();g.ib=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,g.vb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(arr),gl.STATIC_DRAW);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,g.ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices),gl.STATIC_DRAW)}geo[name]=g}
+function sphere(name,segments=20,rings=14){let p=[],n=[],uv=[],idx=[];for(let r=0;r<=rings;r++){const v=r/rings,t=v*Math.PI;for(let s=0;s<=segments;s++){const u=s/segments,theta=u*Math.PI*2,x=Math.sin(t)*Math.cos(theta),y=Math.cos(t),z=Math.sin(t)*Math.sin(theta);p.push(x,y,z);n.push(x,y,z);uv.push(u,v)}}for(let r=0;r<rings;r++)for(let s=0;s<segments;s++){const a=r*(segments+1)+s,b=a+segments+1;idx.push(a,b,a+1,b,b+1,a+1)}saveGeometry(name,p,n,uv,idx)}
+// unit y range [-1,+1]. smoothly interpolated width/depth control points; built like a garment rather than a cylinder.
+function loft(name,profile,segments=22,rings=20){const p=[],n=[],uv=[],idx=[];function sample(t){const q=t*(profile.length-1),i=Math.min(profile.length-2,Math.floor(q)),v=q-i,a=profile[i],b=profile[i+1],s=v*v*(3-2*v);return a.map((a,j)=>a+(b[j]-a)*s)}for(let j=0;j<=rings;j++){let v=j/rings,A=sample(v),before=sample(Math.max(0,v-.001)),after=sample(Math.min(1,v+.001));for(let i=0;i<=segments;i++){let u=i/segments,ang=u*Math.PI*2,c=Math.cos(ang),s=Math.sin(ang),x=A[0]*c,z=A[1]*s,y=-1+2*v;let slopeX=(after[0]-before[0])/.002/2,slopeZ=(after[1]-before[1])/.002/2;let nx=c/(A[0]||1),ny=-(slopeX*c*c+slopeZ*s*s),nz=s/(A[1]||1),len=Math.hypot(nx,ny,nz);p.push(x,y,z);n.push(nx/len,ny/len,nz/len);uv.push(u,v)}}for(let j=0;j<rings;j++)for(let i=0;i<segments;i++){const a=j*(segments+1)+i,b=a+segments+1;idx.push(a,a+1,b,a+1,b+1,b)}saveGeometry(name,p,n,uv,idx)}
+function initGeometry(){if(gl)initGL();sphere('sphere');sphere('sphereSmall',12,9);loft('body',[[.68,.68],[.73,.73],[.81,.82],[.94,.88],[1,.92],[.95,.87],[.98,.91],[.90,.85],[.85,.78]]);loft('legs',[[.82,.84],[.85,.87],[.94,.9],[1,.94],[.99,.98],[1,1],[1.06,.95],[1.1,.95]]);loft('arm',[[.72,.75],[.85,.86],[.94,.95],[1,1],[1.06,1.04],[1.12,1.08],[1.12,1.1]]);loft('neck',[[1,1],[1,1],[1,1]]);loft('sole',[[.96,.97],[1,1],[1,1],[.92,.94]]);}
+function clamp(x,a=0,b=1){return Math.min(b,Math.max(a,x))}
+function cBlend(a,b,t){return a.map((v,i)=>v*(1-t)+b[i]*t)}
+function hexRgb(c){let h=c.slice(1);return[0,2,4].map(i=>parseInt(h.slice(i,i+2),16)/255)}
+function hex(c){return '#'+c.map(x=>Math.round(clamp(x)*255).toString(16).padStart(2,'0')).join('')}
+let root=ident(),view=ident(),proj=ident(),angle=0,target=0,spinning=false,lastTick=0,raf=0;
+function rendererSize(){const r=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,cpu?1.25:2);let w=Math.max(2,Math.round(r.width*dpr)),h=Math.max(2,Math.round(r.height*dpr));if(w!==canvas.width||h!==canvas.height){canvas.width=w;canvas.height=h}if(gl)gl.viewport(0,0,w,h);proj=perspective(.72,w/h,.12,50);view=mm(trans(0,-2.63,-10.35),rx(-.015));}
+function raster(g,color,M,texture){const mv=mm(view,mm(root,M)),mvp=mm(proj,mv),verts=[];const pts=g.p;for(let i=0;i<pts.length;i+=3){const w=v4(mvp,pts[i],pts[i+1],pts[i+2]),v=v4(mv,pts[i],pts[i+1],pts[i+2]);if(w[3]<=0){verts.push([0,0,10]);continue}verts.push([(w[0]/w[3]*.5+.5)*canvas.width,(.5-w[1]/w[3]*.5)*canvas.height,v[2]])}for(let i=0;i<g.indices.length;i+=3){let ia=g.indices[i],ib=g.indices[i+1],ic=g.indices[i+2],A=verts[ia],B=verts[ib],C=verts[ic];if(A[2]>=0||B[2]>=0||C[2]>=0)continue;const ax=g.n[ia*3],ay=g.n[ia*3+1],az=g.n[ia*3+2];const t=v4(mv,ax,ay,az,0);let L=Math.hypot(t[0],t[1],t[2])||1;let light=.72+.28*Math.max(0,(-.4*t[0]+.6*t[1]+.8*t[2])/L/1.1);let col=color;if(texture){let u=(g.uv[ia*2]+g.uv[ib*2]+g.uv[ic*2])/3;let v=(g.uv[ia*2+1]+g.uv[ib*2+1]+g.uv[ic*2+1])/3;let dust=Math.abs(Math.sin(Math.floor(u*54)*12.9+Math.floor(v*48)*78.23));col=color.map(c=>c*(.96+dust*.085))}cpuTriangles.push({A,B,C,z:(A[2]+B[2]+C[2])/3,color:hex(col.map(c=>c*light))})}}
+function draw(geoId,col,M,texture=0,gloss=0){const g=geo[geoId];if(!g)return;if(cpu){raster(g,col,M,texture);return}const mv=mm(view,mm(root,M)),mvp=mm(proj,mv);gl.bindBuffer(gl.ARRAY_BUFFER,g.vb);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,g.ib);for(const [key,size,offset] of [['aPos',3,0],['aNormal',3,12],['aUv',2,24]]){gl.vertexAttribPointer(attr[key],size,gl.FLOAT,false,32,offset);gl.enableVertexAttribArray(attr[key])}gl.uniformMatrix4fv(uni.uMvp,false,new Float32Array(mvp));gl.uniformMatrix4fv(uni.uMV,false,new Float32Array(mv));gl.uniform3fv(uni.uColor,new Float32Array(col));gl.uniform1f(uni.uTexture,texture);gl.uniform1f(uni.uGloss,gloss);gl.drawElements(gl.TRIANGLES,g.indices.length,gl.UNSIGNED_SHORT,0)}
+function ell(c,x,y,z,sx,sy,sz,az=0,ax=0,ay=0,id='sphere'){draw(id,c,pose(x,y,z,sx,sy,sz,az,ax,ay))}
+function tubing(c,x,y,z,wx,half,hz,angle=0,type='legs',tex=0){draw(type,c,pose(x,y,z,wx,half,hz,angle),tex)}
+function limb(c,x1,y1,z1,x2,y2,z2,r1,r2,kind='arm',tex=0){const dx=x2-x1,dy=y2-y1,dz=z2-z1,L=Math.hypot(dx,dy,dz);const theta=-Math.atan2(dx,dy);draw(kind,c,pose((x1+x2)/2,(y1+y2)/2,(z1+z2)/2,r1,L/2,r2,theta),tex)}
+const skinFor=()=>skinOptions.find(x=>x.id===state.skin)?.rgb||skinOptions[1].rgb;
+function sneaker(x,col,skin){const sole=state.shoes==='white'?[.78,.82,.89]:[.20,.22,.27],sock=[.92,.93,.93];ell(sock,x,.46,-.03,.17,.15,.17);ell(sole,x,.16,.18,.31,.10,.49);ell(col,x,.27,.17,.278,.16,.43);ell(cBlend(col,[1,1,1],.14),x,.275,.48,.24,.09,.19);for(let j=0;j<3;j++)ell([.9,.9,.88],x,.375,.04+j*.106,.13,.015,.022);ell(sole,x,.128,.17,.33,.035,.49)}
+function avatar(){const skin=skinFor(),dark=cBlend(skin,[.22,.11,.08],.18),light=cBlend(skin,[1,1,1],.1),hairColor=[.065,.050,.045];const shirt=hexRgb(items.shirt.find(x=>x.id===state.shirt).hex),denim=hexRgb(items.pants.find(x=>x.id===state.pants).hex),shoeColor=hexRgb(items.shoes.find(x=>x.id===state.shoes).hex);const broad={slim:.88,average:1,broad:1.15}[state.body]||1,shoulder=state.shoulder*broad,waist=state.waist*broad;root=mm(ry(angle),scl(1,state.height,1));
+ // Ground shadow and shoes
+ ell([.40,.53,.72],0,.045,0,1.15,.035,.83);
+ for(const s of [-1,1]){const lx=s*.39*waist; // legs, cuff, hips and shoes
+  ell(skin,lx,.78,0,.19,.48,.2);
+  tubing(denim,lx,1.40,-.03,.35*waist,.92,.35*waist,s*.026,'legs',state.pants==='blue'?1:state.pants==='cargo'?2:1);
+  ell(cBlend(denim,[0,0,0],.08),lx,.52,-.02,.36*waist,.062,.36*waist);
+  if(state.pants==='cargo'){
+   ell(cBlend(denim,[.75,.74,.60],.18),lx+s*.31,1.57,.22,.07,.20,.17);
+   ell(cBlend(denim,[0,0,0],.2),lx+s*.314,1.62,.248,.068,.026,.17);
+  }
+  sneaker(lx,shoeColor,skin);
+ }
+ ell(denim,0,2.39,-.02,.72*waist,.32,.43*waist);
+ // belt, waist & stitching
+ ell(cBlend(denim,[0,0,0],.24),0,2.55,-.01,.70*waist,.065,.42*waist);
+ ell([.60,.61,.63],0,2.57,.427,.068,.042,.018);
+ // Arms: shoulder form, short shirt sleeves, exposed forearms, rounded hands
+ for(const s of [-1,1]){const shoulderX=s*.78*shoulder;
+  ell(skin,s*1.08*shoulder,3.28,.05,.172*broad,.54,.177,s*-.09);
+  ell(skin,s*1.155*shoulder,2.88,.10,.177*broad,.36,.168,s*-.06);
+  ell(skin,s*1.17*shoulder,2.68,.13,.173,.20,.167);
+  ell(shirt,shoulderX,3.89,0,.29*shoulder,.30,.305,s*-.20);
+  ell(shirt,s*.92*shoulder,3.71,.01,.285*shoulder,.30,.296,s*-.20);
+ }
+ // Curved cloth body with shoulder to hip taper
+ tubing(shirt,0,3.33,0,.77*shoulder,.82,.45*broad,0,'body');
+ ell(shirt,0,2.60,.02,.66*waist,.13,.41*waist);
+ ell(cBlend(shirt,[0,0,0],.25),0,4.10,.23,.235,.09,.235);
+ // neck
+ tubing(dark,0,4.30,0,.22,.25,.205,0,'neck');
+ // face shape, jaw, ears
+ let fw=state.face==='soft'?.414:state.face==='angular'?.38:.395;
+ ell(skin,0,4.84,.035,fw,.535,.395);
+ if(state.face!=='soft')ell(dark,0,4.56,.115,fw*.73,.15,.32);
+ for(const s of [-1,1]){ell(skin,s*(fw+.006),4.80,.007,.085,.147,.084);ell(dark,s*(fw+.075),4.79,.05,.018,.043,.023)}
+ // hair base covers skull rear, forehead at varying height
+ ell(hairColor,0,5.19,-.06,fw*1.04,.205,.365);
+ if(state.hair==='fade'){
+  ell(hairColor,0,5.27,-.06,.37,.13,.35);
+  ell([.13,.10,.08],0,5.12,.21,.31,.048,.15);
+ }else if(state.hair==='curls'){
+  ell(hairColor,0,5.27,0,.38,.20,.35);
+  for(let row=0;row<3;row++)for(let j=0;j<8;j++){let a=j*2*Math.PI/8+row*.35,r=.29-row*.05;ell(hairColor,r*Math.cos(a),5.32+row*.066,r*Math.sin(a),.112,.109,.11,0,0,0,'sphereSmall')}
+ }else{
+  ell(hairColor,0,5.25,-.02,.37,.18,.35);
+  for(let j=0;j<5;j++)ell([.085,.064,.054],-.25+j*.11,5.35-j*.028,.12,.14,.11,.19,-.2,j*.12);
+ }
+ // Facial features at front z positive. White of eyes + dark iris, brows
+ for(const s of [-1,1]){
+  ell(dark,s*.15,4.905,.379,.105,.036,.036,s*.1);
+  ell([.94,.88,.81],s*.147,4.864,.399,.069,.034,.033);
+  ell([.22,.16,.13],s*.139,4.862,.428,.027,.028,.016);
+  ell([.055,.055,.050],s*.135,4.862,.439,.016,.018,.012);
+  ell(light,s*.17,4.85,.455,.009,.009,.007,0,0,0,'sphereSmall');
+ }
+ // nose bridge, tip, subtle nostrils, mouth, facial hair
+ ell(skin,0,4.742,.402,.082,.17,.114);
+ ell(light,0,4.689,.485,.084,.052,.065);
+ for(const s of [-1,1])ell(dark,s*.058,4.672,.474,.022,.010,.014);
+ ell([.39,.19,.19],0,4.563,.382,.142,.033,.034);
+ ell(cBlend(skin,[.31,.15,.14],.50),0,4.548,.387,.128,.027,.025);
+ ell(dark,0,4.499,.356,.11,.035,.020);
+ ell(dark,0,4.590,.395,.09,.012,.012);
+}
+function render(){rendererSize();if(gl){gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT)}else{cpuTriangles=[];ctx.clearRect(0,0,canvas.width,canvas.height)}avatar();if(cpu){cpuTriangles.sort((a,b)=>a.z-b.z);for(const q of cpuTriangles){ctx.fillStyle=q.color;ctx.beginPath();ctx.moveTo(q.A[0],q.A[1]);ctx.lineTo(q.B[0],q.B[1]);ctx.lineTo(q.C[0],q.C[1]);ctx.closePath();ctx.fill()}}}
+function persistentDraw(){render()}
+function cameraHint(){let a=((target%(2*Math.PI))+2*Math.PI)%(2*Math.PI);let d=Math.round(a*180/Math.PI)%360;$('#view-hint').textContent=spinning?'AUTO ROTATING · ALL ANGLES':`${({0:'FRONT',90:'SIDE',180:'BACK',270:'SIDE'})[d]||d+'°'} VIEW · ROTATE TO INSPECT`;
+ $$('[data-camera]').forEach(b=>{let selected=b.dataset.camera==='spin'?spinning:b.dataset.camera==='front'&&d===0||b.dataset.camera==='side'&&d===90||b.dataset.camera==='back'&&d===180;b.classList.toggle('active',!!selected);b.setAttribute('aria-pressed',!!selected)})}
+function startAnimation(){if(!raf){lastTick=performance.now();raf=requestAnimationFrame(tick)}}
+function tick(now){raf=0;const dt=Math.min(.06,(now-lastTick)/1000);lastTick=now;if(spinning){target+=dt*.8;angle=target;}else{let diff=target-angle;if(Math.abs(diff)>.001)angle+=diff*Math.min(1,dt*7.8);else angle=target;}render();if(spinning||Math.abs(angle-target)>.001)raf=requestAnimationFrame(tick)}
+function rotateBy(deg){spinning=false;target+=(deg*Math.PI/180);cameraHint();startAnimation()}
+function setCamera(c){if(c==='spin'){spinning=!spinning;target=angle;cameraHint();if(spinning)startAnimation();return}spinning=false;let d={front:0,side:90,back:180}[c]*Math.PI/180;let turns=Math.round((angle-d)/(Math.PI*2));target=d+turns*2*Math.PI;cameraHint();startAnimation()}
+$('#rotate-left').addEventListener('click',()=>rotateBy(-45));$('#rotate-right').addEventListener('click',()=>rotateBy(45));$$('[data-camera]').forEach(b=>b.addEventListener('click',()=>setCamera(b.dataset.camera)));
+$$('[data-tab]').forEach(b=>b.addEventListener('click',()=>{state.tab=b.dataset.tab;renderUI()}));
+$('#name').addEventListener('input',e=>{state.name=e.target.value;persist()});
+$('#editor-content').addEventListener('click',e=>{
+ let b=e.target.closest('[data-choice]');if(b){let [k,v]=b.dataset.choice.split(':');state[k]=v;renderUI();return}
+ for(let k of ['skin','hair','face','body']){b=e.target.closest('[data-'+k+']');if(b){state[k]=b.dataset[k];renderUI();return}}
+ b=e.target.closest('[data-load]');if(b){const x=saved[Number(b.dataset.load)];if(x){state={...defaults,...x,tab:'wardrobe'};renderUI();toast('Look loaded into your closet')}return}
+ b=e.target.closest('[data-delete]');if(b){saved.splice(Number(b.dataset.delete),1);renderUI();toast('Saved look deleted')}
+});
+$('#editor-content').addEventListener('input',e=>{let b=e.target.closest('[data-range]');if(b){state[b.dataset.range]=Number(b.value);let o=$('#out-'+b.dataset.range);if(o)o.textContent=Math.round(Number(b.value)*100)+'%';persistentDraw();persist()}});
+$('#save').addEventListener('click',()=>{saved.unshift({...state,date:new Date().toLocaleDateString()});saved=saved.slice(0,25);persist();if(state.tab==='saved')renderEditor();toast('Look saved on this device ✦')});
+$('#reset').addEventListener('click',()=>{let tab=state.tab;state={...defaults,tab};angle=target=0;spinning=false;renderUI();cameraHint();toast('Starter character restored')});
+$('#randomize').addEventListener('click',()=>{for(let k of ['shirt','pants','shoes'])state[k]=rand(items[k]).id;state.skin=rand(skinOptions).id;state.hair=rand(hairs).id;state.body=rand(bodies).id;renderUI();toast('New character look ✦')});
+$('#export').addEventListener('click',()=>{render();let c=document.createElement('canvas');c.width=1200;c.height=1500;let x=c.getContext('2d');let g=x.createLinearGradient(0,0,1200,1500);g.addColorStop(0,'#f6fbff');g.addColorStop(1,'#a8c1f1');x.fillStyle=g;x.fillRect(0,0,1200,1500);x.fillStyle='#3b5fa0';x.font='900 53px Trebuchet MS';x.fillText('DRESSROOM.',65,98);x.font='bold 25px Trebuchet MS';x.fillText((state.name||'YOUR CHARACTER').slice(0,20),67,1335);x.font='21px Trebuchet MS';x.fillText(`${state.shirt.toUpperCase()} TEE · ${state.pants.toUpperCase()} PANTS · ${state.shoes.toUpperCase()} SHOES`,67,1384);x.drawImage(canvas,240,145,720,1120);let a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='DRESSROOM-v05-'+(state.name||'character').replace(/[^a-z0-9-]/gi,'_')+'.png';document.body.appendChild(a);a.click();a.remove();toast('Character image exported')});
+window.addEventListener('resize',()=>{persistentDraw()});
+try{initGeometry();renderUI();cameraHint()}catch(error){console.error(error);$('#view-hint').textContent='3D rendering unavailable in this browser';toast('3D preview unavailable')}
+window.DressroomV05={getState:()=>JSON.parse(JSON.stringify(state)),getCamera:()=>({angle,target,spinning}),setCamera,render};
+})();
+</script></body></html>
